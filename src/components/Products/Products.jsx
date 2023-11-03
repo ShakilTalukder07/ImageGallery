@@ -1,32 +1,38 @@
-// import image1 from '../../assets/images/image-1.webp'
-// import image2 from '../../assets/images/image-2.webp'
-// import image3 from '../../assets/images/image-3.webp'
-// import image4 from '../../assets/images/image-4.webp'
-// import image5 from '../../assets/images/image-5.webp'
-// import image6 from '../../assets/images/image-6.webp'
-// import image7 from '../../assets/images/image-7.webp'
-// import image8 from '../../assets/images/image-8.webp'
-// import image9 from '../../assets/images/image-9.webp'
-// import image10 from '../../assets/images/image-10.jpeg'
-// import image11 from '../../assets/images/image-11.jpeg'
 import { BsCardImage } from 'react-icons/bs'
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
+import { useDrag, useDrop } from "react-dnd";
 
 
 const Products = () => {
 
+    // State to handle image upload 
     const [images, setImages] = useState([]);
+    const [nextImageId, setNextImageId] = useState(1);
 
     // Function to handle image upload
     const handleImageUpload = (e) => {
-        // const selectedImage = e.target.files[0].name;
-        const selectedImage = URL.createObjectURL(e.target.files[0])
-        console.log(selectedImage);
-        setImages([...images, selectedImage])
+        // const selectedImage = URL.createObjectURL(e.target.files[0])
+        // const imageId = selectedImage.indexOf
+        // console.log(selectedImage);
+        // setImages([...images, selectedImage])
 
+        const selectedImage = e.target.files[0];
+        if (selectedImage) {
+            // Create a new image object with ID and data URL
+            const newImage = {
+                id: nextImageId, // Assign a unique ID
+                url: URL.createObjectURL(selectedImage), // Convert the selected image to a data URL
+            };
+
+            // Increment the ID for the next image
+            setNextImageId(nextImageId + 1);
+
+            // Add the new image to the images array
+            setImages([...images, newImage]);
+        }
     };
-    // console.log(images[0]);
 
+console.log(images);
 
     return (
         <div className='p-5'>
@@ -35,12 +41,13 @@ const Products = () => {
                     images.map((image, index) => (
 
                         <div className={`${index === 0 ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1'} border border-black rounded-lg`} key={index}>
-                            <img src={image} alt="" />
+                            <img src={image.url} alt="" />
+
                         </div>
                     )
                     )
                 }
-
+                {/* Form to upload image  */}
                 <form className='border border-dashed border-black flex flex-col justify-center items-center rounded-lg'>
                     <input onChange={handleImageUpload} className='bg-transparent' type="file" accept="image/*" name="" id="" />
                     <BsCardImage className=''></BsCardImage>
